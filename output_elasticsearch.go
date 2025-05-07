@@ -170,7 +170,7 @@ func (o *ElasticsearchOutput) prepareDocument(msg *Message) map[string]interface
 	meta := payloadMeta(msg.Meta)
 	data := msg.Data
 	reqID := byteutils.SliceToString(meta[1]) // 获取请求ID
-	timestamp := time.Now().Format(time.RFC3339)
+	timestamp := time.Now().Format(time.DateTime)
 
 	// 判断是请求还是响应
 	isRequest := isRequestOrResponse(msg.Meta)
