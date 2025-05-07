@@ -11,19 +11,19 @@ ENV GO111MODULE=on \
 WORKDIR /app
 
 # 先复制依赖文件以利用缓存层
-COPY go.mod go.sum ./
+COPY ../go.mod go.sum ./
 
 # 下载依赖
 RUN go mod download
 
 # 复制项目所有文件
-COPY . .
+COPY .. .
 
 # 安装CA证书
 RUN apt-get update && apt-get install -y ca-certificates
 
 # 构建应用程序 (确保与你的项目结构匹配)
-RUN go build -o gosmo-agent  cmd/gor/gor.go
+RUN go build -o gosmo-agent
 # 暴露应用程序的端口
 EXPOSE 8888
 
