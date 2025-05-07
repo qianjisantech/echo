@@ -24,9 +24,14 @@ RUN apt-get update && apt-get install -y ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
 # 构建应用程序 (确保与你的项目结构匹配)
-RUN go build -o gosmo-agent ./cmd/gor/gor.go  --input-raw :8888 --input-raw-track-response  --output-elasticsearch-host='http://47.94.96.190:9200' --output-elasticsearch-index='gosmo'  --output-stdout
+RUN go build -o gosmo-agent ./cmd/gor/gor.go
 # 暴露应用程序的端口
 EXPOSE 8888
 
 # 运行应用程序
-CMD ["./gosmo-agent"]
+CMD ["./gosmo-agent", \
+    "--input-raw=:8888", \
+    "--input-raw-track-response", \
+    "--output-elasticsearch-host=http://47.94.96.190:9200", \
+    "--output-elasticsearch-index=gosmo", \
+    "--output-stdout"]
