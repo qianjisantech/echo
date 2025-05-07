@@ -20,11 +20,10 @@ RUN go mod download
 COPY . .
 
 # 安装CA证书
-RUN apt-get update && apt-get install -y ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y ca-certificates
 
 # 构建应用程序 (确保与你的项目结构匹配)
-RUN go build -o gosmo-agent ./cmd/gor/gor.go
+RUN go build -o gosmo-agent  cmd/gor/gor.go
 # 暴露应用程序的端口
 EXPOSE 8888
 
