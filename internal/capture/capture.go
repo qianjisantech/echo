@@ -241,7 +241,6 @@ func (l *Listener) Listen(ctx context.Context) (err error) {
 				}
 
 				if !found {
-					fmt.Println("Found new interface:", in.Name)
 					l.Lock()
 					l.Activate()
 
@@ -469,7 +468,6 @@ func (l *Listener) PcapHandle(ifi pcap.Interface) (handle *pcap.Handle, err erro
 	if bpfFilter == "" {
 		bpfFilter = l.Filter(ifi)
 	}
-	fmt.Println("Interface:", ifi.Name, ". BPF Filter:", bpfFilter)
 	err = handle.SetBPFFilter(bpfFilter)
 	if err != nil {
 		handle.Close()
@@ -490,7 +488,6 @@ func (l *Listener) SocketHandle(ifi pcap.Interface) (handle Socket, err error) {
 	if l.config.BPFFilter == "" {
 		l.config.BPFFilter = l.Filter(ifi)
 	}
-	fmt.Println("BPF Filter: ", l.config.BPFFilter)
 	if err = handle.SetBPFFilter(l.config.BPFFilter); err != nil {
 		handle.Close()
 		return nil, fmt.Errorf("BPF filter error: %q%s, interface: %q", err, l.config.BPFFilter, ifi.Name)
@@ -696,8 +693,6 @@ func (l *Listener) activatePcapFile() (err error) {
 		return fmt.Errorf("BPF filter error: %q, filter: %s", e, l.config.BPFFilter)
 	}
 
-	fmt.Println("BPF Filter:", l.config.BPFFilter)
-
 	l.Handles["pcap_file"] = packetHandle{
 		handler: handle,
 	}
@@ -726,7 +721,6 @@ func (l *Listener) activateAFPacket() error {
 		if l.config.BPFFilter == "" {
 			l.config.BPFFilter = l.Filter(ifi)
 		}
-		fmt.Println("Interface:", ifi.Name, ". BPF Filter:", l.config.BPFFilter)
 		handle.SetBPFFilter(l.config.BPFFilter, 64<<10)
 
 		l.Handles[ifi.Name] = packetHandle{

@@ -111,9 +111,10 @@ type AppSettings struct {
 
 	ModifierConfig HTTPModifierConfig
 
-	InputKafkaConfig  InputKafkaConfig
-	OutputKafkaConfig OutputKafkaConfig
-	KafkaTLSConfig    KafkaTLSConfig
+	InputKafkaConfig          InputKafkaConfig
+	OutputKafkaConfig         OutputKafkaConfig
+	KafkaTLSConfig            KafkaTLSConfig
+	OutputElasticSearchConfig ElasticsearchConfig
 }
 
 // Settings holds Gor configuration
@@ -269,6 +270,10 @@ func init() {
 	flag.Var(&Settings.ModifierConfig.HeaderBasicAuthFilters, "http-basic-auth-filter", "A regexp to match the decoded basic auth string against. Requests with non-matching headers will be dropped:\n\t gor --input-raw :8080 --output-http staging.com --http-basic-auth-filter \"^customer[0-9].*\"")
 	flag.Var(&Settings.ModifierConfig.HeaderHashFilters, "http-header-limiter", "Takes a fraction of requests, consistently taking or rejecting a request based on the FNV32-1A hash of a specific header:\n\t gor --input-raw :8080 --output-http staging.com --http-header-limiter user-id:25%")
 	flag.Var(&Settings.ModifierConfig.ParamHashFilters, "http-param-limiter", "Takes a fraction of requests, consistently taking or rejecting a request based on the FNV32-1A hash of a specific GET param:\n\t gor --input-raw :8080 --output-http staging.com --http-param-limiter user_id:25%")
+
+	// ElasticSearch
+	flag.StringVar(&Settings.OutputElasticSearchConfig.Hosts, "output-elasticsearch-host", "", "Read request and response stats from ElasticSearch:\n\tgor --input-raw :8080 --output-elasticsearch-host='http://localhost:9200'")
+	flag.StringVar(&Settings.OutputElasticSearchConfig.Index, "output-elasticsearch-index", "", "Read request and response stats from ElasticSearch:\n\tgor --input-raw :8080 --output-elasticsearch-host='http://localhost:9200' --output-elasticsearch-index='index'")
 
 	// default values, using for tests
 	Settings.OutputFileConfig.SizeLimit = 33554432

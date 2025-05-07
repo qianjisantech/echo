@@ -7,6 +7,8 @@ import (
 	"io"
 	"log"
 	"sync"
+	"sync/atomic"
+	"time"
 
 	"github.com/coocood/freecache"
 )
@@ -14,12 +16,22 @@ import (
 // Emitter represents an abject to manage plugins communication
 type Emitter struct {
 	sync.WaitGroup
-	plugins *InOutPlugins
+	plugins    *InOutPlugins
+	processed  uint64 // 原子计数器
+	dropped    uint64 // 原子计数器
+	errors     uint64 // 原子计数器
+	lastError  error
+	startedAt  time.Time
+	stopChan   chan struct{}
+	middleware string
 }
 
 // NewEmitter creates and initializes new Emitter object.
 func NewEmitter() *Emitter {
-	return &Emitter{}
+	return &Emitter{
+		stopChan:  make(chan struct{}),
+		startedAt: time.Now(),
+	}
 }
 
 // Start initialize loop for sending data from inputs to outputs
@@ -156,4 +168,7 @@ func CopyMulty(src PluginReader, writers ...PluginWriter) error {
 			}
 		}
 	}
+}
+func (e *Emitter) Processed() uint64 {
+	return atomic.LoadUint64(&e.processed)
 }

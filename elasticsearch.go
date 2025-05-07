@@ -26,7 +26,15 @@ type ESPlugin struct {
 	indexor *elastigo.BulkIndexer
 	done    chan bool
 }
-
+type OutputElasticSearchConfig struct {
+	Host     string
+	Username string
+	Password string
+	UseSSL   bool
+	Timeout  int64
+	BulkSize int
+	Index    string
+}
 type ESRequestResponse struct {
 	ReqURL               string `json:"Req_URL"`
 	ReqMethod            string `json:"Req_Method"`

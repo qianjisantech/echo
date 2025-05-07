@@ -28,7 +28,7 @@ func uuid() []byte {
 	return randByte(24)
 }
 
-var payloadSeparator = "\n🐵🙈🙉\n"
+var payloadSeparator = "\n-------------------------------------------------\n"
 
 func payloadScanner(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	if atEOF && len(data) == 0 {

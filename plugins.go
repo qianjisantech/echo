@@ -1,6 +1,7 @@
 package goreplay
 
 import (
+	"log"
 	"reflect"
 	"strings"
 )
@@ -87,6 +88,7 @@ func (plugins *InOutPlugins) registerPlugin(constructor interface{}, options ...
 
 // NewPlugins specify and initialize all available plugins
 func NewPlugins() *InOutPlugins {
+
 	plugins := new(InOutPlugins)
 	for _, options := range Settings.InputDummy {
 		plugins.registerPlugin(NewDummyInput, options)
@@ -144,10 +146,7 @@ func NewPlugins() *InOutPlugins {
 			break
 		}
 	}
-	////新增 ElasticSearch 类型
-	//if Settings.OutputHTTPConfig.ElasticSearch != "" {
-	//	plugins.registerPlugin(NewHTTPOutput, Settings.OutputHTTPConfig.ElasticSearch)
-	//}
+
 	for _, options := range Settings.OutputHTTP {
 		plugins.registerPlugin(NewHTTPOutput, options, &Settings.OutputHTTPConfig)
 	}
@@ -163,6 +162,10 @@ func NewPlugins() *InOutPlugins {
 	if Settings.InputKafkaConfig.Host != "" && Settings.InputKafkaConfig.Topic != "" {
 		plugins.registerPlugin(NewKafkaInput, Settings.InputKafkaConfig.Offset, &Settings.InputKafkaConfig, &Settings.KafkaTLSConfig)
 	}
-
+	//注册Elasticsearch输出插件
+	if len(Settings.OutputElasticSearchConfig.Hosts) > 0 {
+		log.Printf("Settings.OutputElasticSearchConfig.Host %s", Settings.OutputElasticSearchConfig.Hosts)
+		plugins.registerPlugin(NewElasticsearchOutput, "", &Settings.OutputElasticSearchConfig)
+	}
 	return plugins
 }

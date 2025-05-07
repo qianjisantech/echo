@@ -175,10 +175,10 @@ func NewHTTPOutput(address string, config *HTTPOutputConfig) PluginReadWriter {
 	// it should not be buffered to avoid races
 	o.stopWorker = make(chan struct{})
 
-	if o.config.ElasticSearch != "" {
-		o.elasticSearch = new(ESPlugin)
-		o.elasticSearch.Init(o.config.ElasticSearch)
-	}
+	//if o.config.ElasticSearch != "" {
+	//	o.elasticSearch = new(ESPlugin)
+	//	o.elasticSearch.Init(o.config.ElasticSearch)
+	//}
 	o.client = NewHTTPClient(o.config)
 
 	if Settings.RecognizeTCPSessions {
