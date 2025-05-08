@@ -6,14 +6,12 @@ ENV GO111MODULE=on \
     CGO_ENABLED=1 \
     GOOS=linux
 
-# 修复权限并安装依赖
-RUN mkdir -p /var/lib/apt/lists/partial && \
-    chmod -R 0755 /var/lib/apt/lists && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-    libpcap-dev \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
+RUN wget http://www.tcpdump.org/release/libpcap-1.10.4.tar.gz && \
+    tar zxvf libpcap-1.10.4.tar.gz && \
+    cd libpcap-1.10.4 && \
+    ./configure && \
+    make && \
+    make install
 
 WORKDIR /app
 COPY go.mod go.sum ./
