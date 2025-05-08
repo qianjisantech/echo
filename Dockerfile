@@ -4,7 +4,7 @@ FROM registry.cn-shanghai.aliyuncs.com/dev-sdk/golang1.23.8:latest
 # 设置环境变量
 ENV GO111MODULE=on \
     GOPROXY=https://goproxy.cn,direct \
-    CGO_ENABLED=1 \  # 必须启用CGO
+    CGO_ENABLED=1 \
     GOOS=linux
 
 # 安装构建依赖
