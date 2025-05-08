@@ -19,9 +19,6 @@ RUN go mod download
 # 复制项目所有文件
 COPY .. .
 
-# 安装CA证书
-RUN apt-get update && apt-get install -y ca-certificates
-
 # 4. 关键修正：构建主程序（cmd/gor.go）
 RUN go build -o gosmo-agent ./cmd/gor.go  # 注意路径变化
 
