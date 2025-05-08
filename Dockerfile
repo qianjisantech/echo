@@ -1,5 +1,5 @@
 
-FROM registry.cn-shanghai.aliyuncs.com/vue-gin-devops/golang1.21.1:latest
+FROM registry.cn-shanghai.aliyuncs.com/dev-sdk/golang1.23.8:latest
 
 # 设置环境变量
 ENV GO111MODULE=on \
