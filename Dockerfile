@@ -1,39 +1,36 @@
-# 使用 Go 1.23.8 官方镜像
-FROM golang:1.23.8-bookworm
+
+FROM registry.cn-shanghai.aliyuncs.com/vue-gin-devops/golang1.21.1:latest
 
 # 设置环境变量
 ENV GO111MODULE=on \
     GOPROXY=https://goproxy.cn,direct \
-    CGO_ENABLED=1   \
+    CGO_ENABLED=0 \
     GOOS=linux
 
-# 安装编译依赖
-RUN apt-get update && \
-    apt-get install -y \
-    libpcap-dev  \
-    gcc         \
-    ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
 # 设置工作目录
 WORKDIR /app
 
-# 复制依赖文件
+# 先复制依赖文件以利用缓存层
 COPY go.mod go.sum ./
+
+# 下载依赖
 RUN go mod download
 
-# 复制全部源代码（修正COPY语法）
-COPY . .
+# 复制项目所有文件
+COPY .. .
 
-# 构建应用程序
-RUN go build -v -o gosmo-agent ./cmd/gor.go
+# 安装CA证书
+RUN apt-get update && apt-get install -y ca-certificates
 
-# 验证构建结果
-RUN ldd gosmo-agent 2>/dev/null || echo "静态编译验证"
+# 4. 关键修正：构建主程序（cmd/gor.go）
+RUN go build -o gosmo-agent ./cmd/gor.go  # 注意路径变化
 
-# 暴露端口
+# 5. 验证构建结果
+RUN ls -lh gosmo-agent || echo "构建失败"
+# 暴露应用程序的端口
 EXPOSE 8888
 
-# 运行程序
+# 运行应用程序
 CMD ["./gosmo-agent", \
     "--input-raw=:8888", \
     "--input-raw-track-response", \
