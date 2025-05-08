@@ -6,12 +6,21 @@ ENV GO111MODULE=on \
     CGO_ENABLED=1 \
     GOOS=linux
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    wget \
+    gcc \
+    make \
+    && rm -rf /var/lib/apt/lists/*
+
+# 然后安装libpcap
 RUN wget http://www.tcpdump.org/release/libpcap-1.10.4.tar.gz && \
     tar zxvf libpcap-1.10.4.tar.gz && \
     cd libpcap-1.10.4 && \
     ./configure && \
     make && \
-    make install
+    make install && \
+    rm -rf ../libpcap-1.10.4*
 
 WORKDIR /app
 COPY go.mod go.sum ./
