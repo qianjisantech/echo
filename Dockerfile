@@ -4,23 +4,7 @@ FROM registry.cn-shanghai.aliyuncs.com/dev-sdk/golang1.23.8:latest
 ENV GO111MODULE=on \
     GOPROXY=https://goproxy.cn,direct \
     CGO_ENABLED=1 \
-    GOOS=linux
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    wget \
-    gcc \
-    make \
-    && rm -rf /var/lib/apt/lists/*
-
-# 然后安装libpcap
-RUN wget http://www.tcpdump.org/release/libpcap-1.10.4.tar.gz && \
-    tar zxvf libpcap-1.10.4.tar.gz && \
-    cd libpcap-1.10.4 && \
-    ./configure && \
-    make && \
-    make install && \
-    rm -rf ../libpcap-1.10.4*
+    GOOS=linu
 
 WORKDIR /app
 COPY go.mod go.sum ./
