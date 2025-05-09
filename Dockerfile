@@ -30,4 +30,5 @@ RUN go build -tags netgo -o gosmo-agent ./cmd/gor.go
 
 RUN ls -lh gosmo-agent || echo "构建失败"
 
-CMD ["./gosmo-agent"]
+ENTRYPOINT ["/usr/local/bin/gosmo-agent"]
+CMD ["--input-raw=:8080", "--output-stdout"]
