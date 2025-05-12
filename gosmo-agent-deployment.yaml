@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gosmo-agent
+  labels:
+    app: gosmo-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gosmo-agent
+  template:
+    metadata:
+      labels:
+        app: gosmo-agent
+    spec:
+      hostNetwork: true
+      containers:
+        - name: gosmo-agent
+          image: registry.cn-shanghai.aliyuncs.com/qianjisan/gosmo-agent:latest
+          command: ["/bin/sh", "-c"]
+          args: ["/gor --input-raw=:8080  --input-raw-track-response  --output-stdout --output-elasticsearch-host=http://101.201.116.86:9200 --output-elasticsearch-index=gosmo"]
+          securityContext:
+            capabilities:
+              add: ["NET_RAW", "NET_ADMIN"]
